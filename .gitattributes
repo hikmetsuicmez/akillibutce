@@ -1,0 +1,17 @@
+# Tum metin dosyalari LF ile saklansin (cross-platform tutarlilik)
+* text=auto eol=lf
+
+# Shell scriptleri kesinlikle LF olmali (Windows'ta CRLF olursa calismazlar)
+*.sh text eol=lf
+.githooks/pre-commit text eol=lf
+.githooks/pre-push text eol=lf
+
+# Windows batch dosyalari CRLF olmali
+*.bat text eol=crlf
+
+# Binary dosyalar
+*.jar binary
+*.class binary
+*.png binary
+*.jpg binary
+*.ico binary
