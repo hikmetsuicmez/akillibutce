@@ -66,6 +66,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/kategoriler/sistem").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/analiz/**").hasAuthority("ROLE_PREMIUM_USER")
                 .requestMatchers("/api/kategoriler").hasAuthority("ROLE_PREMIUM_USER")
                 .requestMatchers("/api/raporlar/**").hasAuthority("ROLE_PREMIUM_USER")
