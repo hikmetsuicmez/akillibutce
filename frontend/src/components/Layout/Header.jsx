@@ -1,5 +1,7 @@
+import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
+import { bildirimServisi } from '../../services/bildirimServisi'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
@@ -7,6 +9,47 @@ export default function Header() {
   const { kullanici, cikisYap, premiumMu } = useAuth()
   const { karanlikMod, temaGecis } = useTheme()
   const navigate = useNavigate()
+
+  const [bildirimAcik, setBildirimAcik] = useState(false)
+  const [bildirimler, setBildirimler] = useState([])
+  const [okunmamis, setOkunmamis] = useState(0)
+  const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    const sayaciGuncelle = async () => {
+      try {
+        const sayi = await bildirimServisi.okunmamisSayisiGetir()
+        setOkunmamis(sayi)
+      } catch {}
+    }
+    sayaciGuncelle()
+    const interval = setInterval(sayaciGuncelle, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const disariTikla = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setBildirimAcik(false)
+      }
+    }
+    document.addEventListener('mousedown', disariTikla)
+    return () => document.removeEventListener('mousedown', disariTikla)
+  }, [])
+
+  const bildirimAc = async () => {
+    if (!bildirimAcik) {
+      try {
+        const veri = await bildirimServisi.bildirimleriGetir()
+        setBildirimler(veri)
+        if (veri.some(b => !b.okunduMu)) {
+          await bildirimServisi.tumunuOkunduIsaretle()
+          setOkunmamis(0)
+        }
+      } catch {}
+    }
+    setBildirimAcik(!bildirimAcik)
+  }
 
   const cikisYapIsle = () => {
     cikisYap()
@@ -18,13 +61,12 @@ export default function Header() {
     <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-6">
       <div className="flex items-center gap-2">
         {premiumMu && (
-          <span className="badge-premium">
-            Premium Üye
-          </span>
+          <span className="badge-premium">Premium Üye</span>
         )}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        {/* Karanlık Mod Toggle */}
         <button
           onClick={temaGecis}
           className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -40,6 +82,53 @@ export default function Header() {
             </svg>
           )}
         </button>
+
+        {/* Bildirim Çanı */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={bildirimAc}
+            className="relative p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            title="Bildirimler"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+            </svg>
+            {okunmamis > 0 && (
+              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+                {okunmamis > 9 ? '9+' : okunmamis}
+              </span>
+            )}
+          </button>
+
+          {bildirimAcik && (
+            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Bildirimler</h3>
+              </div>
+              <div className="max-h-72 overflow-y-auto">
+                {bildirimler.length === 0 ? (
+                  <div className="px-4 py-6 text-center text-gray-400 dark:text-gray-500 text-sm">
+                    Henüz bildirim yok.
+                  </div>
+                ) : (
+                  bildirimler.slice(0, 10).map((b) => (
+                    <div
+                      key={b.id}
+                      className={`px-4 py-3 border-b border-gray-50 dark:border-gray-800 last:border-0 ${
+                        !b.okunduMu ? 'bg-primary-50/50 dark:bg-primary-900/10' : ''
+                      }`}
+                    >
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{b.mesaj}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        {new Date(b.olusturulmaTarihi).toLocaleString('tr-TR')}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="text-right">
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">

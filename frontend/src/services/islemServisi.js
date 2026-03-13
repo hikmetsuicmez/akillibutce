@@ -22,4 +22,13 @@ export const islemServisi = {
     const yanit = await api.get('/islemler/ozet', { params: { yil, ay } })
     return yanit.data
   },
+
+  async fisTara(dosya) {
+    const formData = new FormData()
+    formData.append('dosya', dosya)
+    const yanit = await api.post('/islemler/ocr-tara', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return yanit.data
+  },
 }

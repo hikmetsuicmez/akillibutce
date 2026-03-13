@@ -25,6 +25,7 @@ public class IslemService {
 
     private final IslemRepository islemRepository;
     private final KategoriService kategoriService;
+    private final KategoriBurceLimitiService kategoriBurceLimitiService;
 
     @Transactional
     public IslemYaniti islemEkle(IslemIstegi istek, Kullanici kullanici) {
@@ -45,6 +46,12 @@ public class IslemService {
                 .build();
 
         Islem kaydedilen = islemRepository.save(yeniIslem);
+
+        if ("GIDER".equals(kategori.getTip().name())) {
+            kategoriBurceLimitiService.butceKontrolYap(
+                    kullanici, kategori.getId(), istek.getIslemTarihi());
+        }
+
         return entitydenYanitadonustur(kaydedilen);
     }
 

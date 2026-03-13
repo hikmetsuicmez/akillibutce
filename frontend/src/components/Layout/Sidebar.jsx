@@ -7,6 +7,8 @@ const menuOgeleri = [
   { yol: '/hedefler', etiket: 'Hedefler', ikon: '🎯' },
   { yol: '/duzenli-islemler', etiket: 'Abonelikler', ikon: '🔄', premium: true },
   { yol: '/analiz', etiket: 'Analiz', ikon: '📈', premium: true },
+  { yol: '/butce-limitleri', etiket: 'Bütçe Limitleri', ikon: '📉', premium: true },
+  { yol: '/geribildirim', etiket: 'Geri Bildirim', ikon: '💬' },
   { yol: '/premium', etiket: 'Premium', ikon: '⭐' },
 ]
 

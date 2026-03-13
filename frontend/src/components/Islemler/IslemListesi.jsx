@@ -21,44 +21,44 @@ export default function IslemListesi({ islemler, onSil }) {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-100">
-            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <tr className="border-b border-gray-100 dark:border-gray-700">
+            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Kategori
             </th>
-            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Açıklama
             </th>
-            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <th className="text-left py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Tarih
             </th>
-            <th className="text-right py-3 px-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <th className="text-right py-3 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Miktar
             </th>
             <th className="py-3 px-2"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-50">
+        <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
           {islemler.map((islem) => (
-            <tr key={islem.id} className="hover:bg-gray-50 transition-colors">
+            <tr key={islem.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
               <td className="py-3 px-2">
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${
                     islem.kategoriTip === 'GELIR' ? 'bg-green-500' : 'bg-red-500'
                   }`} />
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {islem.kategoriIsim}
                   </span>
                 </div>
               </td>
-              <td className="py-3 px-2 text-sm text-gray-500">
+              <td className="py-3 px-2 text-sm text-gray-500 dark:text-gray-400">
                 {islem.aciklama || '-'}
               </td>
-              <td className="py-3 px-2 text-sm text-gray-500">
+              <td className="py-3 px-2 text-sm text-gray-500 dark:text-gray-400">
                 {tarihFormatla(islem.islemTarihi)}
               </td>
               <td className="py-3 px-2 text-right">
                 <span className={`text-sm font-semibold ${
-                  islem.kategoriTip === 'GELIR' ? 'text-green-600' : 'text-red-600'
+                  islem.kategoriTip === 'GELIR' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                 }`}>
                   {islem.kategoriTip === 'GELIR' ? '+' : '-'}{formatla(islem.miktar)}
                 </span>
@@ -66,7 +66,7 @@ export default function IslemListesi({ islemler, onSil }) {
               <td className="py-3 px-2">
                 <button
                   onClick={() => onSil(islem.id)}
-                  className="text-gray-300 hover:text-red-500 transition-colors text-lg leading-none"
+                  className="text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 transition-colors text-lg leading-none"
                   title="Sil"
                 >
                   ×

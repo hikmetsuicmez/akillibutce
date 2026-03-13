@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/kategoriler").hasAuthority("ROLE_PREMIUM_USER")
                 .requestMatchers("/api/raporlar/**").hasAuthority("ROLE_PREMIUM_USER")
                 .requestMatchers("/api/duzenli-islemler/**").hasAuthority("ROLE_PREMIUM_USER")
+                .requestMatchers("/api/butce-limitleri/**").hasAuthority("ROLE_PREMIUM_USER")
                 .anyRequest().authenticated()
             )
             .authenticationProvider(kimlikDogrulamaSaglayici())

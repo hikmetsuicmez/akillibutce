@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 
-export default function IslemFormu({ kategoriler, onGonder }) {
+export default function IslemFormu({ kategoriler, onGonder, onDeger }) {
   const [form, setForm] = useState({
     kategoriId: '',
     miktar: '',
@@ -9,6 +9,17 @@ export default function IslemFormu({ kategoriler, onGonder }) {
     islemTarihi: new Date().toISOString().split('T')[0],
   })
   const [yukleniyor, setYukleniyor] = useState(false)
+
+  useEffect(() => {
+    if (onDeger) {
+      setForm((f) => ({
+        ...f,
+        miktar: onDeger.miktar != null ? String(onDeger.miktar) : f.miktar,
+        islemTarihi: onDeger.islemTarihi || f.islemTarihi,
+        aciklama: onDeger.aciklama || f.aciklama,
+      }))
+    }
+  }, [onDeger])
 
   const degistir = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -37,8 +48,14 @@ export default function IslemFormu({ kategoriler, onGonder }) {
 
   return (
     <form onSubmit={gonder} className="space-y-4">
+      {onDeger && (
+        <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-3 text-sm text-primary-700 dark:text-primary-300">
+          Fiş verisi form alanlarına dolduruldu. Kategoriyi seçip onaylayın.
+        </div>
+      )}
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kategori</label>
         <select
           name="kategoriId"
           value={form.kategoriId}
@@ -65,7 +82,7 @@ export default function IslemFormu({ kategoriler, onGonder }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Miktar (₺)</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Miktar (₺)</label>
         <input
           type="number"
           name="miktar"
@@ -80,7 +97,7 @@ export default function IslemFormu({ kategoriler, onGonder }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Tarih</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarih</label>
         <input
           type="date"
           name="islemTarihi"
@@ -92,7 +109,7 @@ export default function IslemFormu({ kategoriler, onGonder }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Açıklama <span className="text-gray-400">(opsiyonel)</span>
         </label>
         <input

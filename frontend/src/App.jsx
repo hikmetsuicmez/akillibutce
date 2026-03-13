@@ -10,6 +10,8 @@ import Analiz from './pages/Analiz'
 import Premium from './pages/Premium'
 import BirikimHedefleri from './pages/BirikimHedefleri'
 import DuzenliIslemler from './pages/DuzenliIslemler'
+import GeriBildirim from './pages/GeriBildirim'
+import BurceLimitleri from './pages/BurceLimitleri'
 
 function KorunanRotalar() {
   const { girisYapildiMi } = useAuth()
@@ -23,6 +25,8 @@ function KorunanRotalar() {
         <Route path="/premium" element={<Premium />} />
         <Route path="/hedefler" element={<BirikimHedefleri />} />
         <Route path="/duzenli-islemler" element={<DuzenliIslemler />} />
+        <Route path="/geribildirim" element={<GeriBildirim />} />
+        <Route path="/butce-limitleri" element={<BurceLimitleri />} />
       </Routes>
     </Layout>
   )
