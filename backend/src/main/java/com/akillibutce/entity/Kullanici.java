@@ -62,6 +62,14 @@ public class Kullanici {
     @OneToOne(mappedBy = "kullanici", cascade = CascadeType.ALL, orphanRemoval = true)
     private Abonelik abonelik;
 
+    @OneToMany(mappedBy = "kullanici", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<BirikimHedefi> birikimHedefleri = new ArrayList<>();
+
+    @OneToMany(mappedBy = "kullanici", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DuzenliIslem> duzenliIslemler = new ArrayList<>();
+
     public boolean isPremium() {
         return this.rol == KullaniciRol.ROLE_PREMIUM_USER;
     }

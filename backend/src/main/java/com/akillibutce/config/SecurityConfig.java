@@ -68,6 +68,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/kategoriler/sistem").permitAll()
                 .requestMatchers("/api/analiz/**").hasAuthority("ROLE_PREMIUM_USER")
                 .requestMatchers("/api/kategoriler").hasAuthority("ROLE_PREMIUM_USER")
+                .requestMatchers("/api/raporlar/**").hasAuthority("ROLE_PREMIUM_USER")
+                .requestMatchers("/api/duzenli-islemler/**").hasAuthority("ROLE_PREMIUM_USER")
                 .anyRequest().authenticated()
             )
             .authenticationProvider(kimlikDogrulamaSaglayici())

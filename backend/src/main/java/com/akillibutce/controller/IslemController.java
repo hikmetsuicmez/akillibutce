@@ -2,10 +2,12 @@ package com.akillibutce.controller;
 
 import com.akillibutce.dto.IslemIstegi;
 import com.akillibutce.dto.IslemYaniti;
+import com.akillibutce.dto.OcrYaniti;
 import com.akillibutce.dto.OzetYaniti;
 import com.akillibutce.entity.Kullanici;
 import com.akillibutce.service.IslemService;
 import com.akillibutce.service.KullaniciService;
+import com.akillibutce.service.OcrMockServisi;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +28,7 @@ public class IslemController {
 
     private final IslemService islemService;
     private final KullaniciService kullaniciService;
+    private final OcrMockServisi ocrMockServisi;
 
     @PostMapping
     public ResponseEntity<IslemYaniti> islemEkle(
@@ -67,5 +71,17 @@ public class IslemController {
         int hedefAy = (ay == 0) ? bugun.getMonthValue() : ay;
         OzetYaniti ozet = islemService.aylikOzetGetir(kullanici, hedefYil, hedefAy);
         return ResponseEntity.ok(ozet);
+    }
+
+    @PostMapping("/ocr-tara")
+    public ResponseEntity<OcrYaniti> fisTara(
+            @RequestParam("dosya") MultipartFile dosya,
+            @AuthenticationPrincipal UserDetails kullaniciDetaylari) {
+        Kullanici kullanici = kullaniciService.epostayaGoreGetir(kullaniciDetaylari.getUsername());
+        if (!kullanici.isPremium()) {
+            return ResponseEntity.status(403).build();
+        }
+        OcrYaniti yanit = ocrMockServisi.fisOku(dosya);
+        return ResponseEntity.ok(yanit);
     }
 }

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ThemeProvider } from './context/ThemeContext'
 import Layout from './components/Layout/Layout'
 import Giris from './pages/Giris'
 import Kayit from './pages/Kayit'
@@ -7,6 +8,8 @@ import Dashboard from './pages/Dashboard'
 import Islemler from './pages/Islemler'
 import Analiz from './pages/Analiz'
 import Premium from './pages/Premium'
+import BirikimHedefleri from './pages/BirikimHedefleri'
+import DuzenliIslemler from './pages/DuzenliIslemler'
 
 function KorunanRotalar() {
   const { girisYapildiMi } = useAuth()
@@ -18,6 +21,8 @@ function KorunanRotalar() {
         <Route path="/islemler" element={<Islemler />} />
         <Route path="/analiz" element={<Analiz />} />
         <Route path="/premium" element={<Premium />} />
+        <Route path="/hedefler" element={<BirikimHedefleri />} />
+        <Route path="/duzenli-islemler" element={<DuzenliIslemler />} />
       </Routes>
     </Layout>
   )
@@ -31,12 +36,14 @@ function HerkesGirebilir() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/giris" element={<><HerkesGirebilir /><Giris /></>} />
-        <Route path="/kayit" element={<><HerkesGirebilir /><Kayit /></>} />
-        <Route path="/*" element={<KorunanRotalar />} />
-      </Routes>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/giris" element={<><HerkesGirebilir /><Giris /></>} />
+          <Route path="/kayit" element={<><HerkesGirebilir /><Kayit /></>} />
+          <Route path="/*" element={<KorunanRotalar />} />
+        </Routes>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
